@@ -1,0 +1,12 @@
+FROM golang:1.23 AS builder
+WORKDIR /app
+COPY consumer.go .
+RUN go mod init consumer && go mod tidy
+RUN GOOS=linux GOARCH=amd64 go build -o consumer
+
+FROM debian:12-slim
+WORKDIR /app
+COPY --from=builder /app/consumer /consumer
+RUN apt-get update && apt-get install -y ca-certificates && rm -rf /var/lib/apt/lists/*
+ENTRYPOINT ["/consumer"]
+
