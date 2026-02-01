@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: solace-app-config
+  namespace: solace
+data:
+  SOLACE_HOST: "tcp://solace:55555"
+  SOLACE_VPN: "vpn1"
+  TOPIC: "stock/tick/publisher"
+  QUEUE: "q.tick.receiver"
+

@@ -1,0 +1,26 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: solace-consumer
+  namespace: solace
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: solace-consumer
+  template:
+    metadata:
+      labels:
+        app: solace-consumer
+    spec:
+      imagePullSecrets:
+      - name: ghcr-secret
+      containers:
+      - name: consumer
+        image: ghcr.io/khushal-vaishnav/solace-consumer:REPLACE_SHA
+        envFrom:
+        - configMapRef:
+            name: solace-app-config
+        - secretRef:
+            name: solace-app-secret
+
