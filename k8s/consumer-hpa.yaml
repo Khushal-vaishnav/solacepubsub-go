@@ -11,11 +11,11 @@ spec:
   minReplicas: 1
   maxReplicas: 10
   metrics:
-  - type: Pods
-    pods:
+  - type: External
+    external:
       metric:
         name: solace_message_lag
       target:
-        type: AverageValue
-        averageValue: "100"
+        type: Value
+        value: "0.5"
 

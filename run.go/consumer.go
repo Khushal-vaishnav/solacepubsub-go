@@ -152,6 +152,7 @@ func startConsumer(
 	}
 
 	receiver.ReceiveAsync(func(msg message.InboundMessage) {
+		time.Sleep(5 * time.Millisecond)
 		consumedTotal.Inc()
 	})
 
