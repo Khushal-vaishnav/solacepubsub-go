@@ -17,7 +17,7 @@ spec:
       - name: ghcr-secret
       containers:
       - name: consumer
-        image: ghcr.io/khushal-vaishnav/solace-consumer:REPLACE_SHA
+        image: ghcr.io/khushal-vaishnav/solace-consumer:1ff429e2684bdc68bf8f563b85b000baddd9ee17
         envFrom:
         - configMapRef:
             name: solace-app-config
