@@ -17,7 +17,7 @@ spec:
       - name: ghcr-secret
       containers:
       - name: producer
-        image: ghcr.io/khushal-vaishnav/solace-producer:1ff429e2684bdc68bf8f563b85b000baddd9ee17
+        image: ghcr.io/khushal-vaishnav/solace-producer:1.0
         envFrom:
         - configMapRef:
             name: solace-app-config
