@@ -37,8 +37,8 @@ jobs:
     - name: Build & Push Producer
       uses: docker/build-push-action@v5
       with:
-        context: ./run.go
-        file: ./run.go/Dockerfile.producer
+        context: ./app
+        file: ./app/Dockerfile.producer
         push: true
         tags: |
           ghcr.io/${{ env.IMAGE_NAMESPACE }}/solace-producer:${{ github.sha }}
@@ -47,8 +47,8 @@ jobs:
     - name: Build & Push Consumer
       uses: docker/build-push-action@v5
       with:
-        context: ./run.go
-        file: ./run.go/Dockerfile.consumer
+        context: ./app
+        file: ./app/Dockerfile.consumer
         push: true
         tags: |
           ghcr.io/${{ env.IMAGE_NAMESPACE }}/solace-consumer:${{ github.sha }}
