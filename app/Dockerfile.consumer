@@ -1,12 +1,30 @@
+# ---------- BUILD STAGE ----------
 FROM golang:1.23 AS builder
-WORKDIR /app
-COPY consumer.go .
-RUN go mod init consumer && go mod tidy
-RUN GOOS=linux GOARCH=amd64 go build -o consumer
 
-FROM debian:12-slim
+WORKDIR /build
+
+# 1️⃣ Copy Go module files first (for caching)
+COPY go.mod go.sum ./
+RUN go mod download
+
+# 2️⃣ Copy consumer source code
+COPY consumer.go .
+
+# 3️⃣ Build the Go binary with CGO enabled
+RUN CGO_ENABLED=1 GOOS=linux GOARCH=amd64 go build -o consumer
+
+
+# ---------- RUNTIME STAGE ----------
+FROM solace/solace-pubsub-standard:latest
+
 WORKDIR /app
-COPY --from=builder /app/consumer /consumer
-RUN apt-get update && apt-get install -y ca-certificates && rm -rf /var/lib/apt/lists/*
+
+# 4️⃣ Copy only the compiled binary (not source code)
+COPY --from=builder /build/consumer /consumer
+
+# 5️⃣ Ensure runtime linker can find solclient
+ENV LD_LIBRARY_PATH=/usr/lib/solclient
+
+# 6️⃣ Start the consumer
 ENTRYPOINT ["/consumer"]
 
