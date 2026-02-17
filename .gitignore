@@ -1,0 +1,11 @@
+# Local Kubernetes testing
+k8s-local/
+
+# Terraform generated files
+terraform/.terraform/
+terraform/*.tfstate*
+
+*.log
+*.zip
+*.tar
+*.jar

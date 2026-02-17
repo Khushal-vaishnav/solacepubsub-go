@@ -1,0 +1,54 @@
+name: Build and Push Solace Apps
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+env:
+  REGISTRY: ghcr.io
+  IMAGE_NAMESPACE: khushal-vaishnav
+
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Log in to GHCR
+      uses: docker/login-action@v3
+      with:
+        registry: ghcr.io
+        username: ${{ github.actor }}
+        password: ${{ secrets.GHCR_TOKEN }}
+
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v3
+
+    # ---------------- PRODUCER ----------------
+    - name: Build & Push Producer
+      uses: docker/build-push-action@v5
+      with:
+        context: ./app
+        file: ./app/Dockerfile.producer
+        push: true
+        tags: |
+          ghcr.io/${{ env.IMAGE_NAMESPACE }}/solace-producer:${{ github.sha }}
+
+    # ---------------- CONSUMER ----------------
+    - name: Build & Push Consumer
+      uses: docker/build-push-action@v5
+      with:
+        context: ./app
+        file: ./app/Dockerfile.consumer
+        push: true
+        tags: |
+          ghcr.io/${{ env.IMAGE_NAMESPACE }}/solace-consumer:${{ github.sha }}

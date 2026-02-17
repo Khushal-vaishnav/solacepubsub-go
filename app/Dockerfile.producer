@@ -1,0 +1,14 @@
+FROM golang:1.23 AS builder
+WORKDIR /build
+COPY go.mod go.sum ./
+RUN go mod download
+COPY producer.go .
+RUN CGO_ENABLED=1 GOOS=linux GOARCH=amd64 go build -o producer
+
+FROM debian:12-slim
+WORKDIR /app
+COPY --from=builder /build/producer ./producer
+COPY ./solclient-7.33.1.1 /usr/lib/solclient
+ENV LD_LIBRARY_PATH=/usr/lib/solclient
+ENTRYPOINT ["./producer"]
+

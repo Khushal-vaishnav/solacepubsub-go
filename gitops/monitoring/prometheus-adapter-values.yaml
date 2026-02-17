@@ -1,0 +1,16 @@
+prometheus:
+  url: http://prometheus.monitoring.svc.cluster.local
+  port: 9090
+
+rules:
+  external:
+    - seriesQuery: 'solace_message_lag'
+      resources:
+        overrides:
+          namespace:
+            resource: namespace
+      name:
+        matches: "solace_message_lag"
+        as: "solace_message_lag"
+      metricsQuery: 'max(solace_message_lag)'
+
